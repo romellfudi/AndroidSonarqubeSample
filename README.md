@@ -6,7 +6,7 @@ Comenzemos primero configurando nuestro entorno de pruebas.
 
 Las pruebas unitarias fueron trabajadas con SONARQUBE
 
-[![center](snapshot/sonarqube.png)](https://www.sonarqube.org/)
+[![center](snapshot/sonar.png)](https://www.sonarqube.org/)
 
 # Install SonarQube
 
