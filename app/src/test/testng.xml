@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="test-suite">
+    <test name="test">
+        <packages>
+            <package name="fudi.freddy.sonarqubesample.ATest"/>
+        </packages>
+    </test>
+</suite>
