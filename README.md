@@ -133,4 +133,4 @@ Por último detenemos el sonar en caso se requiera:
 sh sonar.sh stop
 ```
 
-July, 2018
+**July, 2018**
