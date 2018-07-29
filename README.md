@@ -7,7 +7,15 @@ Comenzemos primero configurando nuestro entorno de pruebas.
 
 Las pruebas unitarias fueron trabajadas con SONARQUBE
 
-[![center](snapshot/sonar.png)](https://www.sonarqube.org/)
+<style>
+img[src*='#center'] { 
+    width:500px;
+    display: block;
+    margin: auto;
+}
+</style>
+
+[![center](snapshot/sonar.png#center)](https://www.sonarqube.org/)
 
 # Install SonarQube
 
@@ -94,9 +102,9 @@ sh sonar.sh start
 
 En nuestro navegador vemos:
 
-![center](snapshot/a.png)
+![center](snapshot/a.png#center)
 
-![center](snapshot/b.png)
+![center](snapshot/b.png#center)
 
 
 Nos presentará un dashboard, que puede ser administrado para tener protegido las revisiones, pero por defecto esta permitido publicar resultados
@@ -109,23 +117,23 @@ Teniendo todos los componentes funcionando, procederemos a la ejecución de las 
 
 Cuando el task acabe tendremos la confirmación:
 
-![center](snapshot/d.png)
+![center](snapshot/d.png#center)
 
 En nuestro dashboard, vemos que ya se encuentra los resultados de nuestra pruebas 
 
-![center](snapshot/e.png)
+![center](snapshot/e.png#center)
 
 Vemos las primeras métricas: cantidad de bugs, vulneraciones de seguridad, porcentaje de pruebas de covertura, y porcentaje de duplicado
 
-![center](snapshot/f.png)
+![center](snapshot/f.png#center)
 
 Podemos percatarnos el nombre del proyecto y el nombre clave  que se encuentra en la url:
 
-![center](snapshot/g.png)
+![center](snapshot/g.png#center)
 
 Sonar, es una herramienta que proporciona una gran variedad de métricas
 
-![center](snapshot/h.png)
+![center](snapshot/h.png#center)
 
 Por último detenemos el sonar en caso se requiera:
 
