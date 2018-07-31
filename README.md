@@ -3,9 +3,9 @@
 ### by Romell Domínguez
 [![](snapshot/icono.png)](https://www.romellfudi.com/)
 
-Comenzemos primero configurando nuestro entorno de pruebas.
+First, we need to configure the grade variables of Test project
 
-Las pruebas unitarias fueron trabajadas con SONARQUBE
+The test unit cases had worked with SonarQube Framework
 
 <style>
 img[src*='#center'] { 
@@ -13,13 +13,19 @@ img[src*='#center'] {
     display: block;
     margin: auto;
 }
+img[src*='#center_medium'] { 
+    width:300px;
+    display: block;
+    margin: auto;
+}
 </style>
 
-[![center](snapshot/sonar.png#center)](https://www.sonarqube.org/)
+[![center](snapshot/sonar.png#center_medium)](https://www.sonarqube.org/)
 
 # Install SonarQube
 
-Agregar el repositorio maven en el projecto con el classpath del sonarqube:
+Add maven repository of sonarqube and the classpath into gradle-project with:
+
 ```gradle
 maven {
         url "https://plugins.gradle.org/m2/"
@@ -27,7 +33,7 @@ maven {
 classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.3"
 ```
 
-En nuestro módulo de la app, debemos usar el de *jacoco* para el reporte de pruebas como el del sonar para el envio repectivo de los resultados:
+On App module, apply *jacoco* plugin to generate test report, whitch is going to upload in Sonar services:
 
 ```gradle
 apply plugin: "org.sonarqube"
@@ -39,15 +45,15 @@ jacoco {
 ```
 ## Configure Android Project
 
-Creamos un task para la creación del reporte del cóidgo. **Puede ser complicado la configuración si usan flavors pero si es soportado por Gradle:**
+Creating a task for geneate a jacoco format report with gradle.  **Worked with flavors into Android projects:**
 
 ```gradle
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport'])
 ```
 
-También creamos un task para la conexión con el sonar, mencionando algunas propiedades:
+Also we need create a task for connection with the sonar, thats some properties:
 
-* **projectKey**: nombre con único dentro del sonar, usado para futuras revisiones
+* **projectKey**: name key of project reporting into sonar, that key its use for track next releases
 * **url**: ruta de la ubicación del repositorio del sonarQube
 
 ```gradle
@@ -63,7 +69,7 @@ sonarqube {
 }
 ```
 
-Ahora configuramos las pruebas: habilitamos las pruebas de coverturas, evitamos que se detenga por verificación de código (*problemas críticos*) ya que estos lo analizaremos desde el SonarQube, y finalmente indicamos que los reportes tengan el formato jacoco.
+Now we config the tests: we enable the coverage testing, disable abort on error *'check of code with problemas critics'*, because **these errors** we will analyze it from the SonarQube, and finally we indicate that the reports should have the format jacoco.
 
 ```gradle
 android {
@@ -85,7 +91,7 @@ android {
 }
 ```
 
-Por último creamos un task para realizar el envio más eficiente:
+The last configure for quickly and efficiency:
 
 ```gradle
 task exportTestRultToSonarqube(dependsOn: ['jacocoTestReport','sonarqube']){
@@ -94,48 +100,48 @@ task exportTestRultToSonarqube(dependsOn: ['jacocoTestReport','sonarqube']){
 
 ## SonarQube Server Instance
 
-Para esta demostración se usará la versión 7.2, al inizializarlo mediante:
+Deploying a Sonarqube service version 7.2, run sh command worked on Ubuntu and Mac, and exe on Windows:
 
 ```sh
 sh sonar.sh start
 ```
 
-En nuestro navegador vemos:
+On Web browers, look like:
 
 ![center](snapshot/a.png#center)
 
 ![center](snapshot/b.png#center)
 
 
-Nos presentará un dashboard, que puede ser administrado para tener protegido las revisiones, pero por defecto esta permitido publicar resultados
+On dashboard we look projects, issues, rules, quality metric, and more engineering features
 
-Teniendo todos los componentes funcionando, procederemos a la ejecución de las pruebas, creación y envio del reporte mediante el task *exportTestResultToSonarqube*:
+If all components worked well, execute the test task, testing and send it with  *exportTestResultToSonarqube* task:
 
 ```sh
 ./gradlew exportTestResultToSonarqube
 ```
 
-Cuando el task acabe tendremos la confirmación:
+When task over Cuando el task acabe tendremos la confirmación:
 
 ![center](snapshot/d.png#center)
 
-En nuestro dashboard, vemos que ya se encuentra los resultados de nuestra pruebas 
+On dashboard, we look a new project analyzed 
 
 ![center](snapshot/e.png#center)
 
-Vemos las primeras métricas: cantidad de bugs, vulneraciones de seguridad, porcentaje de pruebas de covertura, y porcentaje de duplicado
+Into the project, Look four metric: count of bug, security vulnerabilities, percentage of testing coverage, and percentage of duplicate codes
 
 ![center](snapshot/f.png#center)
 
-Podemos percatarnos el nombre del proyecto y el nombre clave  que se encuentra en la url:
+We verificate the id project in url on web browser:
 
 ![center](snapshot/g.png#center)
 
-Sonar, es una herramienta que proporciona una gran variedad de métricas
+On Sonarqube project dashboard, thats look like:
 
 ![center](snapshot/h.png#center)
 
-Por último detenemos el sonar en caso se requiera:
+Finally, if we need stop sonar service, run next sentence:
 
 ```sh
 sh sonar.sh stop
