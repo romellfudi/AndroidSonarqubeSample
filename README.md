@@ -147,4 +147,4 @@ Finally, if we need stop sonar service, run next sentence:
 sh sonar.sh stop
 ```
 
-**July, 2018**
+**2018, July**
