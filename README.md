@@ -1,4 +1,5 @@
 # Android SonarQube Project
+[![](https://img.shields.io/badge/language-ES-blue.svg)](./README.es)
 
 ### by Romell Domínguez
 [![](snapshot/icono.png)](https://www.romellfudi.com/)
