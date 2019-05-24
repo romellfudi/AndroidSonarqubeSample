@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)#0 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/romellfudi/assets/master/favicon.ico" />  
+  <title>Android Sonarqube Sample</title>
+  <link rel="stylesheet" href="./index_files/css">
+  <link rel="stylesheet" href="./index_files/icon">
+  <link rel="stylesheet" href="./index_files/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body class="vsc-initialized">
+  <google-codelab id="https://github.com/romellfudi/AndroidSonarqubeSample" environment="web" feedback-link="https://github.com/romellfudi/AndroidSonarqubeSample/issues" selected="0" google-codelab-ready="" codelab-title="Android Sonarqube Sample"><div id="drawer"><div class="codelab-time-container" style="display: none;"></div><div class="steps"><ol><li completed="" selected=""><a href="#0"><span class="step"><span>Introduction</span></span></a></li><li><a href="#1"><span class="step"><span>Install SonarQube</span></span></a></li><li><a href="#2"><span class="step"><span>Configure Android Project</span></span></a></li><li><a href="#3"><span class="step"><span>Start SonarQube Server</span></span></a></li><li><a href="#4"><span class="step"><span>Export Metrics</span></span></a></li><li><a href="#5"><span class="step"><span>View Our Metrics</span></span></a></li><li><a href="#6"><span class="step"><span>Stop SonarQube Server</span></span></a></li><li><a href="#7"><span class="step"><span>License</span></span></a></li></ol></div><div class="metadata"><a target="_blank" href="https://github.com/romellfudi/AndroidSonarqubeSample/issues"><i class="material-icons">bug_report</i> Report a mistake</a></div></div><div id="codelab-title"><div id="codelab-nav-buttons"><a href="https://codelabs-preview.appspot.com/" id="arrow-back"><i class="material-icons">close</i></a><a href="#" id="menu"><i class="material-icons">menu</i></a></div><h1 class="title">Android Sonarqube Sample</h1><div class="codelab-time-container" style="display: none;"></div><devsite-user></devsite-user></div><div id="main"><div id="steps"><google-codelab-step label="Introduction" duration="0" step="1" selected=""><h2 is-upgraded="" class="step-title">1. Introduction</h2>
+        <p>First, we need to configure the grade variables of Test project,<br>The test unit cases had worked with SonarQube Framework.</p>
+<p class="image-container"><img style="width: 288.00px" src="./index_files/sonar.png"></p>
+<aside class="warning"><p>Won't explain technical details about the configuration of the project android.</p>
+</aside>
+<p>All Testing are working using  <a href="https://site.mockito.org/" target="_blank">Mockito</a> 1.10.* dependency</p>
+<p class="image-container"><img style="width: 194.00px" src="./index_files/mockito.png"></p>
+<h2 is-upgraded="">A<strong>dd dependencies on gradle config project file</strong></h2>
+<ul>
+<li>Permission library (for request permissions at Android 5)</li>
+<li>SharePreferenceLib library (save internal memory)</li>
+<li>Glide library for structure data</li>
+<li>Junit, mockito, hamcrest &amp; powermock Libraries</li>
+</ul>
+<h2 is-upgraded=""><strong>We need Dependency Libraries' version</strong></h2>
+<pre><code><span class="pln">glideVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">'3.6.1'</span><span class="pln">
+junitVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">'4.12'</span><span class="pln">
+mockitoVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">'1.10.19'</span><span class="pln">
+powerMockito </span><span class="pun">=</span><span class="pln"> </span><span class="str">'1.6.2'</span><span class="pln">
+hamcrestVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">'1.3'</span></code></pre>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Install SonarQube" duration="0" step="2"><h2 is-upgraded="" class="step-title">2. Install SonarQube</h2>
+        <p>Add maven repository of sonarqube and the classpath into gradle-project with:</p>
+<pre><code><span class="com">// build.gradle</span><span class="pln">
+maven </span><span class="pun">{</span><span class="pln">
+        url </span><span class="str">"https://plugins.gradle.org/m2/"</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+classpath </span><span class="str">"org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.3"</span></code></pre>
+<p>On App module, apply jacoco plugin to generate test report, wich is going to upload in Sonar services:</p>
+<pre><code><span class="com">// app_build.gradle</span><span class="pln">
+apply plugin</span><span class="pun">:</span><span class="pln"> </span><span class="str">"org.sonarqube"</span><span class="pln">
+
+apply plugin</span><span class="pun">:</span><span class="pln"> </span><span class="str">'jacoco'</span><span class="pln">
+jacoco </span><span class="pun">{</span><span class="pln">
+    toolVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">"0.7.5.201505241946"</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<aside class="special"><p>Already load Requirement libraries</p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Configure Android Project" duration="0" step="3"><h2 is-upgraded="" class="step-title">3. Configure Android Project</h2>
+        <p>Creating a task for generate a <em><code>jacoco</code></em> format report with gradle. <strong>Worked with flavors into Android projects</strong>:</p>
+<pre><code><span class="pln">task jacocoTestReport</span><span class="pun">(</span><span class="pln">type</span><span class="pun">:</span><span class="pln"> </span><span class="typ">JacocoReport</span><span class="pun">,</span><span class="pln"> dependsOn</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'testDebugUnitTest'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'createDebugCoverageReport'</span><span class="pun">])</span></code></pre>
+<p>Also we need create a task for connection with the sonar, thats some properties:</p>
+<ul>
+<li><strong><code>projectKey</code></strong>: name key of project reporting into sonar, that key its use for track next releases</li>
+<li><strong><code>url</code></strong>: ruta de la ubicación del repositorio del sonarQube</li>
+</ul>
+<pre><code><span class="pln">sonarqube </span><span class="pun">{</span><span class="pln">
+    properties </span><span class="pun">{</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+        </span><span class="kwd">property</span><span class="pln"> </span><span class="str">"sonar.projectKey"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"sonar_qube_sample"</span><span class="pln">
+        </span><span class="kwd">property</span><span class="pln"> </span><span class="str">"sonar.projectName"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"SonarQube Sample Ver. 1"</span><span class="pln">
+        </span><span class="kwd">property</span><span class="pln"> </span><span class="str">"sonar.projectVersion"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"1.0.f"</span><span class="pln">
+        </span><span class="kwd">property</span><span class="pln"> </span><span class="str">"sonar.host.url"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"http://localhost:9000"</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Now we config the tests: we enable the coverage testing, disable abort on error <code>check of code with </code><em><code>critics issues</code></em>, because <em><code>these errors</code></em> we will analyze it from the SonarQube, and finally we indicate that the reports should have the format jacoco.</p>
+<pre><code><span class="pln">android </span><span class="pun">{</span><span class="pln">
+    buildTypes </span><span class="pun">{</span><span class="pln">
+        debug </span><span class="pun">{</span><span class="pln">
+            testCoverageEnabled </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    lintOptions </span><span class="pun">{</span><span class="pln">
+        abortOnError </span><span class="kwd">false</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    testOptions </span><span class="pun">{</span><span class="pln">
+        unitTests</span><span class="pun">.</span><span class="pln">all </span><span class="pun">{</span><span class="pln">
+            jacoco </span><span class="pun">{</span><span class="pln">
+                includeNoLocationClasses </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>The last configure for quickly and efficiency:</p>
+<pre><code><span class="pln">task exportTestRultToSonarqube</span><span class="pun">(</span><span class="pln">dependsOn</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'jacocoTestReport'</span><span class="pun">,</span><span class="str">'sonarqube'</span><span class="pun">]){</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Start SonarQube Server" duration="0" step="4"><h2 is-upgraded="" class="step-title">4. Start SonarQube Server</h2>
+        <p>Deploying a Sonarqube service version 7.2, run sh command worked on Ubuntu and Mac, and exe on Windows:</p>
+<pre><code><span class="pln">sh sonar</span><span class="pun">.</span><span class="pln">sh start</span></code></pre>
+<p>On Web browsers, open<a href="http://localhost:9000/" target="_blank"> localhost:9000</a></p>
+<p class="image-container"><img style="width: 360.00px" src="./index_files/a.png"></p>
+<p>Wait for few moment while it will be finishing the tasks.</p>
+<p class="image-container"><img style="width: 624.00px" src="./index_files/b.png"></p>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Export Metrics" duration="0" step="5"><h2 is-upgraded="" class="step-title">5. Export Metrics</h2>
+        <h2 is-upgraded=""><strong>Run Gradle task</strong></h2>
+<p>On dashboard we look projects, issues, rules, quality metric, and more engineering features<br>If all components worked well, execute the test task, testing and send it with <em><code>exportTestResultToSonarqube</code></em> task:</p>
+<pre><code><span class="pun">./</span><span class="pln">gradlew exportTestResultToSonarqube</span></code></pre>
+<h2 is-upgraded=""><strong>Confirm message:</strong></h2>
+<p class="image-container"><img style="width: 624.00px" src="./index_files/d.png"></p>
+<aside class="special"><p>When task over, we will get a confirm message: <code>BUILD SUCCESSFUL</code></p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="View Our Metrics" duration="0" step="6"><h2 is-upgraded="" class="step-title">6. View Our Metrics</h2>
+        <p>On dashboard, we look a new project analyzed</p>
+<p class="image-container"><img style="width: 360.00px" src="./index_files/e.png"></p>
+<p>Into the project, Look four metric: count of bug, security vulnerabilities, percentage of testing coverage, and percentage of duplicate codes:</p>
+<p class="image-container"><img style="width: 624.00px" src="./index_files/f.png"></p>
+<p>We verificate the id project in url on web browser:</p>
+<p class="image-container"><img style="width: 576.00px" src="./index_files/g.png"></p>
+<p>On Sonarqube project dashboard, thats look like:</p>
+<p class="image-container"><img style="width: 624.00px" src="./index_files/h.png"></p>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Stop SonarQube Server" duration="0" step="7"><h2 is-upgraded="" class="step-title">7. Stop SonarQube Server</h2>
+        <p>Finally, if we need stop sonar service, run next sentence:</p>
+<pre><code><span class="pln">sh sonar</span><span class="pun">.</span><span class="pln">sh stop</span></code></pre>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="License" duration="0" step="8"><h2 is-upgraded="" class="step-title">8. License</h2>
+        <h2 is-upgraded=""><strong>by Romell Domínguez</strong></h2>
+<p class="image-container"><a href="http://portfolio.romellfudi.com"><img style="width: 287.00px" src="./index_files/icono.png"></a></p>
+<p>Copyright 2018 Romell D.Z.</p>
+<p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at</p>
+<p>http://www.apache.org/licenses/LICENSE-2.0</p>
+<p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,</p>
+<p>WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</p>
+<p>See the License for the specific language governing permissions and limitations under the License.</p>
+
+
+      </div></div></google-codelab-step></div><div id="controls"><div id="fabs"><a href="#" id="previous-step" title="Previous step" disappear="">Back</a><div class="spacer"></div><a href="#" id="next-step" title="Next step">Next</a><a href="https://codelabs-preview.appspot.com/" id="done" hidden="" title="Codelab complete">Done</a></div></div></div></google-codelab>
+
+  <script async="">
+    document.addEventListener("DOMContentLoaded", function() {
+      var pubBtn = document.getElementById('publishButton');
+      var pubForm = document.getElementById('publishForm');
+      var pubStatus = document.getElementById('publishButtonStatus');
+
+      pubForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        pubBtn.disabled = true;
+        pubStatus.textContent = '';
+        pubStatus.classList.remove('success');
+        pubStatus.classList.remove('error');
+
+        var req = new XMLHttpRequest();
+
+        var onError = function() {
+          var msg = 'Request failed';
+          if (req.statusText) {
+            msg += ' with status "' + req.statusText + '"';
+          }
+          if (req.responseText) {
+            msg += ': ' + req.responseText;
+          }
+          pubStatus.classList.add('error');
+          pubStatus.textContent = msg;
+          pubBtn.disabled = false;
+        };
+
+        req.addEventListener('load', function() {
+          if (req.status != 200) {
+            onError();
+            return;
+          }
+          pubStatus.textContent = ('Publication request submitted' +
+            ' (reload preview to re-publish)');
+          pubStatus.classList.add('success');
+        });
+        req.addEventListener('error', onError);
+        req.addEventListener('abort', onError);
+        req.open("post", pubForm.action);
+        req.send(new FormData(pubForm));
+      });
+    });
+  </script>
+
+  <script src="./index_files/native-shim.js"></script>
+  <script src="./index_files/custom-elements.min.js"></script>
+  <script src="./index_files/prettify.js"></script>
+  <script src="./index_files/codelab-elements.js"></script>
+
+
+</body></html>
