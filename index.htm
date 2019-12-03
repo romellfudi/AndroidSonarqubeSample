@@ -60,12 +60,12 @@ jacoco </span><span class="pun">{</span><span class="pln">
 
 
       </div></div></google-codelab-step><google-codelab-step label="Configure Android Project" duration="3" step="3"><h2 is-upgraded="" class="step-title">3. Configure Android Project</h2>
-        <p>Create a task for generate a <em><code>jacoco</code></em> format report with gradle. <strong>Worked with flavors into Android projects</strong>:</p>
+        <p>Create a task for generate a <em><code>jacoco</code></em> report format with gradle. <strong>Worked with flavors into Android projects</strong>:</p>
 <pre><code><span class="pln">task jacocoTestReport</span><span class="pun">(</span><span class="pln">type</span><span class="pun">:</span><span class="pln"> </span><span class="typ">JacocoReport</span><span class="pun">,</span><span class="pln"> dependsOn</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'testDebugUnitTest'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'createDebugCoverageReport'</span><span class="pun">])</span></code></pre>
 <p>Also You need to create a task from connection with the sonar, these properties:</p>
 <ul>
 <li><strong><code>projectKey</code></strong>: a name key of project reporting into sonar, that key its use it to track the following releases</li>
-<li><strong><code>url</code></strong>: SonarQube repository url</li>
+<li><strong><code>url</code></strong>: SonarQube repository url where your sonar was deployed</li>
 </ul>
 <pre><code><span class="pln">sonarqube </span><span class="pun">{</span><span class="pln">
     properties </span><span class="pun">{</span><span class="pln">
@@ -77,7 +77,7 @@ jacoco </span><span class="pun">{</span><span class="pln">
         </span><span class="pun">...</span><span class="pln">
     </span><span class="pun">}</span><span class="pln">
 </span><span class="pun">}</span></code></pre>
-<p>Now you need to config the tests: Enabling the coverage testing, you could disable abort on error <code>check of code with </code><em><code>critics issues</code></em>, because <em><code>these errors</code></em> you would analyze it from the SonarQube, and finally you could indicate which reports had jacoco format.</p>
+<p>Now you need to config the tests: Enabling the coverage testing, you could disable abort on error <code>check of code with </code><em><code>critics issues</code></em>, because <em><code>these errors</code></em> you would analyze it from SonarQube Dashboard, and don't forget add your jacoco reports.</p>
 <pre><code><span class="pln">android </span><span class="pun">{</span><span class="pln">
     buildTypes </span><span class="pun">{</span><span class="pln">
         debug </span><span class="pun">{</span><span class="pln">
@@ -95,7 +95,7 @@ jacoco </span><span class="pun">{</span><span class="pln">
         </span><span class="pun">}</span><span class="pln">
     </span><span class="pun">}</span><span class="pln">
 </span><span class="pun">}</span></code></pre>
-<p>The last configure for quickly and efficiency:</p>
+<p>Make a new gradle task to run it quickly and efficiency:</p>
 <pre><code><span class="pln">task exportTestRultToSonarqube</span><span class="pun">(</span><span class="pln">dependsOn</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'jacocoTestReport'</span><span class="pun">,</span><span class="str">'sonarqube'</span><span class="pun">]){</span><span class="pln">
 </span><span class="pun">}</span></code></pre>
 
