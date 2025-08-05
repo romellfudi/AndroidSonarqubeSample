@@ -1,3 +1,5 @@
+![Gemini_Generated_Image_8hdux98hdux98hdu](https://github.com/user-attachments/assets/71914df4-df6a-4d5d-8eed-40fed3e140f4)
+
 # Android SonarQube Project
 [![](https://img.shields.io/badge/language-ES-blue.svg)](./README.es)
 
